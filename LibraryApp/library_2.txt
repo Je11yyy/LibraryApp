@@ -1,3 +1,0 @@
-||  harry potter 1  | fantasy  |     Book    |0||
-||  harry potter 2  | fantasy  |    EBook    |2||
-||  harry potter 3  | fantasy  |  AudioBook  |7||

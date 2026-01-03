@@ -12,6 +12,9 @@ class Library:
         lib = lib.split('.')
         return lib[0]
     
+    def print_items(self):
+        print(self.libr)
+
     def find(self, book: Book):
         with open(file=self.file, mode='r') as file:
             lines = file.readlines()
@@ -41,7 +44,7 @@ class Library:
                     if shablon_for_search == book.info:
                         count = int(parts[5])
                         book.count += count
-                        line = book.info + f"{book.count}||\n"   
+                        line = f"{book.info}{book.count}||\n"  
                         same = 1             
                     file.write(line)
                 
@@ -51,25 +54,34 @@ class Library:
     def add_book(self, book: Book):
         res = self._find_add(book)
         if res != False:
-            self.libr += book.info + f"{book.count}||\n"
+            self.libr += f"{book.info}{book.count}||\n"
             Storage_libr.save(self)
 
-    def del_book(self, book : Book, del_count):
+    def del_book(self, book : Book, del_count, storage : Storage_libr):
         with open(file=self.file, mode='r+') as file:
+            Found = False
             lines = file.readlines()
             file.seek(0)
             file.truncate()
-
+            
             if lines != "":
                 for line in lines:
                     parts = line.split('|')
                     shablon_for_search = f"||{parts[2]}|{parts[3]}|{parts[4]}|"
-
+                    
                     if shablon_for_search == book.info:
+                        Found = True
                         count = int(parts[5])
                         if del_count > count:
                             del_count = count
                         book.count = count - del_count
-                        line = book.info + f"{book.count}||\n"            
+                        line = f"{book.info}{book.count}||\n"
+                        
                     file.write(line)
-                return del_count
+    
+                # Если Книга НЕ НАЙДЕНА в файле библ, то мы ничего не удалили
+                if Found == False:
+                    del_count = 0
+        # Актуализируем atr libr так как, мы напрямую работаем с файлом, мы обновляем libr
+        self.libr = storage.load()
+        return del_count

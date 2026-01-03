@@ -13,7 +13,8 @@ class TitleSearch(SearchStrategy):
     @staticmethod
     def search(title, library : Library):
         title = f"{title.center(18)}"
-        with open(file=library.file, mode='r') as file:
+        with open(file=library.file, mode='a+') as file:
+            file.seek(0)
             lines = file.readlines()
             for line in lines:
                 part = line.split('|')
@@ -24,9 +25,10 @@ class GenreSearch(SearchStrategy):
     @staticmethod
     def search(genre, library : Library):
         genre = f"{genre.center(10)}"
-        with open(file=library.file, mode='r') as file:
-            lines = file.readlines()
+        with open(file=library.file, mode='a+') as file:
+            file.seek(0)
             list = []
+            lines = file.readlines()
             for line in lines:
                 part = line.split('|')
                 if part[3] == genre:
@@ -38,9 +40,10 @@ class TypeofBook(SearchStrategy):
     def search(type : Types, library : Library):
         if isinstance(type, Types):
             type = f"{type.center(13)}"
-            with open(file=library.file, mode='r') as file:
-                lines = file.readlines()
+            with open(file=library.file, mode='a+') as file:
+                file.seek(0)
                 list = []
+                lines = file.readlines()              
                 for line in lines:
                     part = line.split('|')
                     if part[4] == type:

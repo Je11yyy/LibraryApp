@@ -1,7 +1,7 @@
-from abc import ABC
+from abc import ABC, abstractclassmethod
 from enum import Enum
-from storage import Storage_users
-
+from storage import Storage_libr, Load_reader, Save_admin, Save_reader
+import os
 
 class Types(Enum):
     Book = 1
@@ -15,7 +15,7 @@ class Book:
         self.count = count
 
     @classmethod
-    def _from_str_(cls, s):
+    def from_str(cls, s):
         parts = s.split('|')
         name = parts[2]
         genre = parts[3]
@@ -31,25 +31,32 @@ class User(ABC):
 class Admin(User):
     def __init__(self, name, library):
         super().__init__(name)
-        self.library = str(library)
-        Storage_users.save(self)
-        
+        self.library = library
+        Save_admin.save(self)
+    
+    def return_library_items(self):
+        self.library.print_items()
+           
 class Reader(User):
-    def __init__(self, name, storage:Storage_users):
+    def __init__(self, name, storage: Load_reader):
         super().__init__(name)
         self.inventory = storage.load()
     
     def get_inventory(self):
         return self.inventory
 
-    def buy(self, name_of_book, count, library):
+    def buy(self, name_of_book, count, library, storage: Storage_libr):
         from search import TitleSearch
         
         str = TitleSearch.search(name_of_book, library)
-        book_buy = Book._from_str_(str)
-        if book_buy.count == 0:
+        if str == None:
             return "Book isnt in Storage of Library"
-        count = library.del_book(book_buy, count)
+        book_buy = Book.from_str(str)
+        if book_buy.count == 0:
+            return "Book isnt in Storage of Library now"
+        count = library.del_book(book_buy, count, storage)
         self.inventory.append(f"{book_buy.info}{count}||")
-        Storage_users.save(self)
+        # ЕСЛИ ЧИТАТЕЛЬ ЗАШЕЛ НА САЙТ К ПРИМЕРУ, 
+        # ЗАРЕГ, НО НЕ КУПИЛ КНИГУ --> ТО ЕГО НЕТ СМЫСЛА ДЕРЖАТЬ В БАЗЕ
+        Save_reader.save(self)
         return "You Bought succesfuly"
