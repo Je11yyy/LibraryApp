@@ -1,0 +1,14 @@
+[
+    {
+        "name": "harry potter 1",
+        "genre": "fantasy",
+        "type": "Book",
+        "count": 1
+    },
+    {
+        "name": "harry potter 2",
+        "genre": "fantasy",
+        "type": "Book",
+        "count": 0
+    }
+]

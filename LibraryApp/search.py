@@ -1,6 +1,6 @@
 from abc import ABC, abstractclassmethod
-from library_core import Library
 from models import Types
+import json
 
 
 class SearchStrategy(ABC):
@@ -11,41 +11,42 @@ class SearchStrategy(ABC):
 
 class TitleSearch(SearchStrategy):
     @staticmethod
-    def search(title, library : Library):
-        title = f"{title.center(18)}"
-        with open(file=library.file, mode='a+') as file:
-            file.seek(0)
-            lines = file.readlines()
-            for line in lines:
-                part = line.split('|')
-                if part[2] == title:
-                    return line
-                
+    def search(title: str, library: "Library"):
+        try:
+            with open(file=library.file, mode='r') as file:
+                books = json.load(file)
+            for book in books:
+                if book["name"] == title:
+                    return book
+            return None
+        except:
+            return None
+
 class GenreSearch(SearchStrategy):
     @staticmethod
-    def search(genre, library : Library):
-        genre = f"{genre.center(10)}"
-        with open(file=library.file, mode='a+') as file:
-            file.seek(0)
+    def search(genre, library):
+        try:
+            with open(file=library.file, mode='r') as file:
+                books = json.load(file)
             list = []
-            lines = file.readlines()
-            for line in lines:
-                part = line.split('|')
-                if part[3] == genre:
-                    list.append(line)
+            for book in books:
+                if book["genre"] == genre:
+                    list.append(book)
             return list
+        except:
+            return None
 
 class TypeofBook(SearchStrategy):
     @staticmethod
-    def search(type : Types, library : Library):
-        if isinstance(type, Types):
-            type = f"{type.center(13)}"
-            with open(file=library.file, mode='a+') as file:
-                file.seek(0)
+    def search(typeof : Types, library):
+        if isinstance(typeof, Types):
+            try:
+                with open(file=library.file, mode='r') as file:
+                    books = json.load(file)
                 list = []
-                lines = file.readlines()              
-                for line in lines:
-                    part = line.split('|')
-                    if part[4] == type:
-                        list.append(line)
+                for book in books:
+                    if book["type"] == typeof:
+                        list.append(book)
                 return list
+            except:
+                return None
