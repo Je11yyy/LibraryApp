@@ -63,8 +63,7 @@ class Reader_Storage(Storage_save, Storage_load):
                 readers = json.load(file)
         except:
             readers = []
-        # ЕСЛИ ЧИТАТЕЛЬ ЗАШЕЛ НА САЙТ К ПРИМЕРУ, 
-        # ЗАРЕГАЛСЯ, НО НЕ КУПИЛ КНИГУ --> ТО ЕГО НЕТ СМЫСЛА ДЕРЖАТЬ В БАЗЕ
+
         if user.inventory == []:
             return None
         
