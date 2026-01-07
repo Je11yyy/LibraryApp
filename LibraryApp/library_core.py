@@ -31,8 +31,6 @@ class Library:
             self.libr.append(add_book.info)
 
     def del_book(self, book_buy : Book, buy_count):
-        ## МОЖНО ТУТ ПРОПИСАТЬ TRY
-        ## И ПЕРЕДЕЛАТЬ СОХРАНЕНИЕ
         try:
             with open(file=self.file, mode='r') as file:
                 self.libr = json.load(file)
